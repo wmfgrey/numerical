@@ -1,50 +1,21 @@
+/*
+NAME:		root.c 
+DESCRIPTION: 	collection of tools for find roots and
+                minimum of functions.
+                routines.	
+AUTHOR:	 	Will Grey
+VERSION:	2015-05-05	
+LICENSE:	This is free and unencumbered software 
+                released into the public domain.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#include "numerical.h"
 
-#define ERR_TOL    1e-7
-#define MAX_ITERS  200
-#define GOLDEN_RATIO (SQRT(5)-1)/2
-
-double secant(double (*f)(double), double, double);
-double fixedPointIteration(double (*f)(double), double);
-double bisect(double (*f)(double),double,double);
-double newton(double (*f)(double), double (*fd)(double), double);
-double regulaFalsi(double (*f)(double),double,double);
-double brute (double (*f)(double), double, double, double);
-double golden (double (*f)(double), double, double);
-double newtonSqaureRoot(double (*f)(double, double), double (*fd)(double), double, double);
-double squareRoot(double);
-double sqr(double, double);
-double dsqr(double);
-double cosine(double);
-double poly(double);
-double dpoly(double);
-double functionTest1(double x);
-double functionTest2(double x);
-double functionTest3(double x);
-
-int main(int argc, char *argv[])
-{
- golden(functionTest3,0,2);
- golden(functionTest1,3,7);
- golden(functionTest2,5,7);
- golden(poly,-0.5,1.0); 
-
- brute (poly,-1.0,1.0, 0.0001); 
- brute (functionTest1,3,7, 0.0001); 
- secant(poly,0.0,1.0);
- newton(poly, dpoly, 0.0); 
- regulaFalsi(poly,-1.0,1.0); 
- bisect(poly,-1.0,1.0);
- fixedPointIteration(cosine,1.0); 
- squareRoot(20); 
- return (EXIT_SUCCESS);
-
-} 
 
 double golden (double (*f)(double), double a, double b){
  
@@ -71,7 +42,7 @@ double golden (double (*f)(double), double a, double b){
 
   }
 
- fprintf(stdout,"%f %f %d\n", f(fabs(b+a)/2), fabs(b+a)/2, i); 
+ fprintf(stdout,"Golden: %f %f %d\n", f(fabs(b+a)/2), fabs(b+a)/2, i); 
  return fabs(b+a)/2;
 
 }
@@ -93,7 +64,7 @@ double secant(double (*f)(double), double x1, double x2)
   i++;    
  }   
  
- fprintf(stdout,"%f %f %d\n",f1, x, i); 
+ fprintf(stdout,"Secant: %f %f %d\n",f1, x, i); 
  return x;
    
 } 
@@ -117,7 +88,7 @@ double newton(double (*f)(double), double (*fd)(double), double x)
     
  }   
  
- fprintf(stdout,"%f %f %d\n",fx, x, i); 
+ fprintf(stdout,"Newton: %f %f %d\n",fx, x, i); 
  return x;
    
 } 
@@ -152,7 +123,7 @@ double regulaFalsi(double (*f)(double), double a, double b)
     
  }   
  
- fprintf(stdout,"%f %f %d\n",fx, x, i);  
+ fprintf(stdout,"Regula Falsi: %f %f %d\n",fx, x, i);  
  return x;
    
 } 
@@ -183,7 +154,7 @@ double bisect(double (*f)(double), double a, double b)
   i++;       
  }   
  
- fprintf(stdout,"%f %f %d\n",fx, x, i);
+ fprintf(stdout,"Bisection: %f %f %d\n",fx, x, i);
  return x;
    
 } 
@@ -207,7 +178,7 @@ double brute (double (*f)(double), double a, double b, double eps){
    
  }
  
- fprintf(stdout,"%f %f %d\n",fxmin, xmin, i);
+ fprintf(stdout,"Brute: %f %f %d\n",fxmin, xmin, i);
  return xmin;
 
 }
@@ -232,40 +203,10 @@ double fixedPointIteration(double (*f)(double), double x)
   i++;
 } 
   
- fprintf(stdout,"%f %f %d\n",x, err, i);   
+ fprintf(stdout,"Fixed Point Iteration: %f %f %d\n",x, err, i);   
  return x;
    
 } 
-
-double poly(double x)
-{
- 
- double a=3.0, b=1.0, c=-5.0, d=-1.0;
- return d + x*(c + x*(b + x*a));
-
-}
-
-double dpoly(double x)
-{
- 
- double a=3.0, b=1.0, c=-5.0;
- return c+ x*(2 * b + x * 3 * a);
-
-}
-  
-double cosine(double x){
-
- x=cos(x);
- return x;
-
-}
-
-double exponent(double x){
-
- x=exp(-1.0*x);
- return x;
-
-}
 
 
 double squareRoot(double a){
@@ -304,27 +245,11 @@ double newtonSqaureRoot(double (*f)(double, double), double (*fd)(double), doubl
     
  }   
  
- fprintf(stdout,"%f %f %d\n",x, fx, i); 
+ fprintf(stdout,"Newton sqrt: %f %f %d\n",x, fx, i); 
  return x;
    
 } 
 
-double functionTest1(double x){
 
- return -1.0*pow(x-4.1,2);
-
-}
-
-double functionTest2(double x){
-
- return x * sin(x) - 2 * cos(x);
-
-}
-
-double functionTest3(double x){
-
- return x*x + x - 2*sqrt(x);
-
-}
  
 

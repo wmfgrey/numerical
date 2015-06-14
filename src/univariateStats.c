@@ -1,9 +1,18 @@
-/* NAME:	univariateStats.c 
+/* 
+NAME:	univariateStats.c 
 DESCRIPTION: 	Calculating univariate statistics.  
 AUTHOR:	 	Will Grey
 VERSION:	2015-05-05
-LICENSE:	This is free and unencumbered software released into the public domain.	*/
+LICENSE:	This is free and unencumbered software
+                released into the public domain.	
+*/
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <ctype.h>
+#include <sys/time.h>
 #include "numerical.h"
 
 int univStats(float *data, int n, univariateStats *stats){

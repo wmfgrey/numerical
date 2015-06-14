@@ -1,20 +1,16 @@
+/*
+NAME:		fourierTransform.c 
+DESCRIPTION: 	For calculating the DFT and its inverse.
+AUTHOR:	 	Will Grey
+VERSION:	2015-05-05	
+LICENSE:	This is free and unencumbered software 
+                released into the public domain.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
-#define PI 3.14159265
-
-int complexConvert(float *, float *, float *, float *, int);
-int RealDFT(float *, float *, int);
-int ForwardDFT(float *, float *, float *, float *,  int);
-int InverseDFT(float *, float *, float *, float *, int);
-
-int main(int argc, char *argv[])
-{
-
- 
-  return EXIT_SUCCESS;
-}
+#include "numerical.h"
 
 int complexConvert(float *real, float *imag, float *mag, float *phase, int n){
  

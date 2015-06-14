@@ -1,67 +1,19 @@
+/*
+NAME:		simplex.c 
+DESCRIPTION: 	Using Nelder Mead for N-dimensional
+                function mininisation.
+AUTHOR:	 	Will Grey
+VERSION:	2015-05-05	
+LICENSE:	This is free and unencumbered software 
+                released into the public domain.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
-
-#define ERR_TOL    1e-6
-#define MAX_ITERS  200
-
-
-int memoryCheck(void);	
-void freeDoubleVector(double * );
-void freeFloatVector(float * );
-void freeCharVector(unsigned char * );
-void freeLongVector(long int * );
-void freeShortVector(short int * );
-double ** allocateDoubleMatrix(int, int);
-float ** allocateFloatMatrix(int, int);
-unsigned char ** allocateCharMatrix(int, int);
-short int ** allocateShortMatrix(int, int);
-long int ** allocateLongMatrix(int, int);
-void freeDoubleMatrix(double **, int);
-void freeFloatMatrix(float **, int);
-void freeLongMatrix(long int **, int);
-void freeShortMatrix(short int **, int);
-void freeCharMatrix(unsigned char **, int);
-double * allocateDoubleVector(int);
-float * allocateFloatVector(int);
-short int * allocateShortVector(int);
-long int * allocateLongVector(int);
-unsigned char * allocateCharVector(int);
-
-int repositionSimplex(short int *, double **, int);
-int sortSimplex(double *, int, short int *);
-int calcCentroid(double **, int, double *);
-double testFunctionSimplex(double *, int);
-double simplexDownhill (double (*f)(double *, int), double **, int);
-
-
-void testSimplex(){
- 
- double **x;
- int n=2; 
- 
- x = allocateDoubleMatrix(n+1,n);
- x[0][0]=0.0; x[0][1]=0.0;
- x[1][0]=1.2; x[1][1]=0.0;
- x[2][0]=0.0; x[2][1]=0.8;
-
- simplexDownhill(testFunctionSimplex,x,n);
- printf("%f %f\n",x[0][0],x[0][1]);
-
-}
-
-int main(int argc, char *argv[])
-{
-
- testSimplex();
-
- return (EXIT_SUCCESS);
-
-} 
-
+#include "numerical.h"
 
 double simplexDownhill (double (*f)(double *, int), double **x, int n){
  
@@ -266,167 +218,4 @@ int sortSimplex(double *data, int n, short int *xpos)
  return (EXIT_SUCCESS);
 
 }
-
-double testFunctionSimplex(double *x,int n){
-
- return pow(x[0],2) - (4 * x[0]) + pow(x[1],2) - x[1] - (x[0] * x[1]);
-  
-}
-
-
-
-/* utility routines */
-
-
-
-
-double * allocateDoubleVector(int i){
- double *vector;
- if((vector = (double *) calloc(i,sizeof(double)))==NULL) 
-  memoryCheck();  
- return vector;
-}
-
-
-float * allocateFloatVector(int i){
- float *vector;
- if((vector = (float *) calloc(i,sizeof(float)))==NULL) 
-  memoryCheck();  
- return vector;
-}
-
-
-short int * allocateShortVector(int i){
- short int *vector;
- if((vector = (short int *) calloc(i,sizeof(short int)))==NULL) 
-  memoryCheck();  
- return vector;
-}
-
-
-long int * allocateLongVector(int i){
- long int *vector;
- if((vector = (long int *) calloc(i,sizeof(long int)))==NULL) 
-  memoryCheck();  
- return vector;
-}
-
-
-unsigned char * allocateCharVector(int i){
- unsigned char *vector;
- if((vector = (unsigned char *) calloc(i,sizeof(unsigned char)))==NULL) 
-  memoryCheck();  
- return vector;
-}
-
-void freeDoubleVector(double * vector){ free(vector);}
-void freeFloatVector(float * vector){ free(vector); }
-void freeCharVector(unsigned char * vector){ free(vector); }
-void freeLongVector(long int * vector){ free(vector);}
-void freeShortVector(short int * vector){ free(vector);}
-
-double ** allocateDoubleMatrix(int i, int j){
- 
- int k;
- double ** matrix;
-
- if((matrix = (double **) calloc(i, sizeof(double *)))==NULL)
-  memoryCheck();
-
- for (k=0; k< i; k++)matrix[k] = allocateDoubleVector(j);
- 
- return matrix;
-}
-
-float ** allocateFloatMatrix(int i, int j){
- 
- int k;
- float ** matrix;
-
- if((matrix = (float **) calloc(i, sizeof(float *)))==NULL)
-  memoryCheck();
-
- for (k=0; k< i; k++)matrix[k] = allocateFloatVector(j);
- 
- return matrix;
-}
-
-unsigned char ** allocateCharMatrix(int i, int j){
- 
- int k;
- unsigned char ** matrix;
-
- if((matrix = (unsigned char **) calloc(i, sizeof(unsigned char *)))==NULL)
-  memoryCheck();
-
- for (k=0; k< i; k++)matrix[k] = allocateCharVector(j);
- 
- return matrix;
-}
-
-long int ** allocateLongMatrix(int i, int j){
- 
- int k;
- long int ** matrix;
-
- if((matrix = (long int **) calloc(i, sizeof(long int *)))==NULL)
-  memoryCheck();
-
- for (k=0; k< i; k++)matrix[k] = allocateLongVector(j);
- 
- return matrix;
-}
-
-short int ** allocateShortMatrix(int i, int j){
- 
- int k;
- short int ** matrix;
-
- if((matrix = (short int **) calloc(i, sizeof(short int *)))==NULL)
-  memoryCheck();
-
- for (k=0; k< i; k++)matrix[k] = allocateShortVector(j);
- 
- return matrix;
-}
-
-
-void freeDoubleMatrix(double ** matrix, int rows){
- int i;
- for (i =0; i < rows; i++) freeDoubleVector(matrix[i]);
- free(matrix);
-}
-
-
-void freeFloatMatrix(float ** matrix, int rows){
- int i;
- for (i =0; i < rows; i++) freeFloatVector(matrix[i]);
- free(matrix);
-}
-
-
-void freeLongMatrix(long int ** matrix, int rows){
- int i;
- for (i =0; i < rows; i++) freeLongVector(matrix[i]);
- free(matrix);
-}
-
-void freeShortMatrix(short int ** matrix, int rows){
- int i;
- for (i =0; i < rows; i++) freeShortVector(matrix[i]);
- free(matrix);
-}
-
-void freeCharMatrix(unsigned char ** matrix, int rows){
- int i;
- for (i =0; i < rows; i++) freeCharVector(matrix[i]);
- free(matrix);
-}
-
-int memoryCheck(void)	
-{	
- fprintf(stderr,"\nUnable to allocate memory.\n\n");
- exit(EXIT_FAILURE);
-}
-
 

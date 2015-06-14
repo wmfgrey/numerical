@@ -1,3 +1,21 @@
+
+/*
+NAME:		utility.c 
+DESCRIPTION: 	Utility tools for memory management,
+                reading and writing to files and other
+                housekeping.
+AUTHOR:	 	Will Grey
+VERSION:	2015-05-05	
+LICENSE:	This is free and unencumbered software 
+                released into the public domain.
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <ctype.h>
+#include <sys/time.h>
 #include "numerical.h"
 
 FILE *openFile(char *path, char *fileName, char *rw)

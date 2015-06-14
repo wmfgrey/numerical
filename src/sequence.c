@@ -1,4 +1,18 @@
+/*
+NAME:		sequence.c 
+DESCRIPTION: 	Sequencing and other routines.	
+AUTHOR:	 	Will Grey
+VERSION:	2015-05-05	
+LICENSE:	This is free and unencumbered software 
+                released into the public domain.
+*/
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <ctype.h>
+#include <sys/time.h>
 #include "numerical.h"
 
 #define BIG 2e6      
@@ -58,62 +72,6 @@ double incompleteGammaFunction(double chi, int n){
  return factorial(n-1) * (1 - exp(-1.0*chi) * sum);
 
 }
-
-
-double chiSquaredDistribution(double chi, int k){
-
- return 1.0 - incompleteGammaFunction(chi/2, (double)k/2) / tgamma((double)k/2);
-
-}
-
-
-
-/* if (chi < 0) pdf = 0;
- if (chi >= 0)
-  pdf = ((pow(chi,(((double)k/2)-1)) * exp(-1.0*chi/2.0)) / (pow(2,((double)k/2)) * tgamma((double)k/2))); */
-
- /*n=chi/deltaK;
- 
- printf("%d\n",n);*/
-/*
- if (chi >= 0){ 
-  for (i=0;i<n;i++){
-   chi = (double)i*deltaK;
-   pdf = ((pow(chi,(((double)k/2)-1)) * exp(-1.0*chi/2.0)) / (pow(2,((double)k/2)) * gammaFunction((double)k/2)));
-   printf("%f %f\n",pdf,i*deltaK); 
-   cdf += pdf;
-  }
-
- }
-
-*/
-
-/* printf("%f %f %f %f\n", gammaFunction((double)k/2), pow(2,((double)k/2)), exp(-1.0*chi/2.0), pow(chi,(((double)k/2)-1))); */
-
-
- 
-
-double monteCarloIntegrationPi(){
-
- int i, m=0;
- double x, y, pi;
- 
- srand48(SEED);   
-
- for (i=1; i<=BIG; i++){
-   		
-  x= drand48();                    
-  y= drand48();                    
- 		
-  if ((x*x + y*y)<1) m++;             
-  pi = 4 *(double)m / (double)i;
-	  		
-   }	
-
- return pi;
-
-}
-
 
 unsigned char *prime( int n){
 

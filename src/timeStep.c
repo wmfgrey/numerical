@@ -1,27 +1,26 @@
+/*
+NAME:		timeStep.c 
+DESCRIPTION: 	Collection of time stepping integration routines.	
+AUTHOR:	 	Will Grey
+VERSION:	2015-05-05	
+LICENSE:	This is free and unencumbered software 
+                released into the public domain.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#include <sys/time.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <ctype.h>
+#include "numerical.h"
 
-double euler(double (*f)(double, double), int, double);
-double funcTimeStep(double, double);
-double rungeKuttaFourthOrder(double (*f)(double, double), int, double);
-double rungeKuttaSecondOrder(double (*f)(double, double), int, double);
-double matsuno(double (*f)(double, double), int, double);
-double leapFrog(double (*f)(double, double), int, double);
-
-int main(int argc, char *argv[])
-{ 
- printf("%f\n",rungeKuttaSecondOrder(funcTimeStep,5,0.1));
- printf("%f\n",rungeKuttaFourthOrder(funcTimeStep,5,0.1));
- printf("%f\n",matsuno(funcTimeStep,5,0.1));
- printf("%f\n",leapFrog(funcTimeStep,5,0.1));
- printf("%f\n",euler(funcTimeStep,5,0.1));
- return (EXIT_SUCCESS);
-
-} 
 
 double euler(double (*f)(double, double), int timeSteps, double h){
  
@@ -108,11 +107,7 @@ double rungeKuttaFourthOrder(double (*f)(double, double), int timeSteps, double 
  return y;
 }
 
-double funcTimeStep(double x, double y){
- 
- return x + y; 
 
-}
 
 
 

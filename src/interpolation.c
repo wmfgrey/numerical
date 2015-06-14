@@ -1,60 +1,16 @@
+/*
+NAME:		interpolation.c 
+DESCRIPTION: 	N-dimensional linear interpolation
+AUTHOR:	 	Will Grey
+VERSION:	2015-05-05	
+LICENSE:	This is free and unencumbered software 
+                released into the public domain.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
-double linearInterpolationQuadratic(double **, double, double, double, double, double, double);
-double linearInterpolation1D(double, double,  double, double, double);
-double linearInterpolation(double *, double **, double *, int);
-double ** allocateDoubleMatrix(int, int);
-double * allocateDoubleVector(int);
-double interp(int, int, double *, double *, double *,int);
-double interp2D(int, double*, double *);
-double mult(int, double, double *, double *);
-
-int main(int argc, char *argv[])
-{
-
- double *fx, **a, *x;
- int dims=2;
-
- x=allocateDoubleVector(dims);
- a=allocateDoubleMatrix(dims,2);
- fx=allocateDoubleVector(dims*2);
- 
- x[0]=0.25;
- x[1]=0.4;
-
- a[0][0]=0;
- a[0][1]=1;
- a[1][0]=0;
- a[1][1]=1;
-
- fx[0]=1;
- fx[1]=3;
- fx[2]=2;
- fx[3]=4;
- 
- 
- printf("%f\n",linearInterpolation(fx, a, x, dims));
-
- return (EXIT_SUCCESS);
-
-} 
-
-double * allocateDoubleVector(int i){
- double *vector;
- vector = (double *) calloc(i,sizeof(double));
- return vector;
-}
-
-double ** allocateDoubleMatrix(int i, int j){
- 
- int k;
- double ** matrix;
- matrix = (double **) calloc(i, sizeof(double *));
- for (k=0; k< i; k++)matrix[k] = allocateDoubleVector(j);
- return matrix;
-}
+#include "numerical.h"
 
 double mult(int dims, double fx, double *pos, double *b){
 
@@ -131,16 +87,16 @@ double interp2D(int dims, double *fx, double *b){
  return val;
 }
 
-double linearInterpolationQuadratic(double **fx, double x1, double x2, double y1, double y2, double x, double y){
+double linearInterpolationQuadratic(double *fx, double x1, double x2, double y1, double y2, double x, double y){
 
   double b1, b2;
   
   b1= (x - x1)/(x2 - x1);
   b2= (y - y1)/(y2 - y1);
-  return (1-b1)*(1-b2)*fx[x1][y1] +
-         (  b1)*(1-b2)*fx[x1][y2] +
-         (1-b1)*(  b2)*fx[x2][y1] +
-         (  b1)*(  b2)*fx[x2][y2];
+  return (1-b1)*(1-b2)*fx[0] +
+         (  b1)*(1-b2)*fx[1] +
+         (1-b1)*(  b2)*fx[2] +
+         (  b1)*(  b2)*fx[3];
 
 }
 

@@ -1,45 +1,18 @@
+/*
+NAME:		integration.c 
+DESCRIPTION: 	Collection of numerical integration tools.	
+AUTHOR:	 	Will Grey
+VERSION:	2015-05-05	
+LICENSE:	This is free and unencumbered software 
+                released into the public domain.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
-
-#define ERR_TOL    1e-7
-#define MAX_ITERS  200
-#define TRIALS     1e5
-#define SEED       1e3  
-
-double gaussianIntegration(double (*f)(double), double, double);
-double monteCarloIntegration1D(double (*f)(double), double, double, int);
-double monteCarloIntegration(double (*f)(double *, int), double *, double *, int, int);
-double trapizoidalRule(double (*f)(double), double, double, int);
-double simpsonsRule(double (*f)(double), double, double, int);
-double Integration(double (*f)(double), double (*method)(double (*f)(double), double, double, int), double, double);
-double  trapizoidalRule2D(double (*f)(double, double), double, double, double, double, int, int);
-double funcTest(double);
-double funcTest5(double, double);
-double funcTest6(double, double);
-double random01();
-double random01Self(long int *r);
-
-int main(int argc, char *argv[])
-{
- long int r;
- r=1867;
-
- Integration(funcTest,simpsonsRule,0.0,1.0);
- Integration(funcTest,trapizoidalRule,0.0,1.0);
- printf("%f\n",monteCarloIntegration1D(funcTest,0.0,1.0,1e7));
- printf("%f\n",simpsonsRule(funcTest,0.0,1.0,100));
- printf("%f\n",gaussianIntegration(funcTest,0.0,1.0));
- printf("%f\n",random01());
- printf("%f\n",random01Self(&r));
- printf("%f\n",trapizoidalRule2D(funcTest5, 0, 1, 0, 1, 10,10)); 
- printf("%f\n",trapizoidalRule2D(funcTest6, 1, 2, 3, 5, 40,40));
- 
- return (EXIT_SUCCESS);
-
-} 
+#include "numerical.h"
 
 double monteCarloIntegration(double (*f)(double *, int), double *a, double *b, int n, int dims){
 
@@ -204,21 +177,6 @@ double Integration(double (*f)(double), double (*method)(double (*f)(double), do
    
 } 
 
-double gaussianIntegration(double (*f)(double), double a, double b){
- 
- double x1, x2, I=0;
- x1 = (b+a-(b-a))/sqrt(3)/2.0;
- x2 = (b+a+(b-a))/sqrt(3)/2.0;
- I=(b-a)*(f(x1)+f(x2))/2;
- return I;
-
-}
-
-double funcTest(double x){
- 
- return sqrt((x*x)+1); 
-
-}
 
 double random01(){
  
@@ -228,23 +186,9 @@ double random01(){
 
 double random01Self(long int *r){
  
- int a=106,c=1283,m=6075;
+ int a=100,c=1000,m=6000;
  *r = (*r*a+c)%m;
  return (double)*r/(double)m;
  
 }
-
-double funcTest5(double x, double y){
- 
- return 8 * exp(-pow(x,2)-pow(y,4)); 
-
-}
-
-double funcTest6(double x1, double x2){
- 
- return x1 * pow(x2,3); 
-
-}
-
-
 

@@ -1,214 +1,63 @@
-
-/* gcc matrix.c -o matrix -Wall -lm */
+/*
+NAME:		matrix.c 
+DESCRIPTION: 	Performs numerous matrix calculations
+AUTHOR:	 	Will Grey
+VERSION:	2015-05-05	
+LICENSE:	This is free and unencumbered software 
+                released into the public domain.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#include <sys/time.h>
+#include "numerical.h"
 
-int memoryCheck(void);	
-void freeDoubleVector(double * );
-void freeFloatVector(float * );
-void freeCharVector(unsigned char * );
-void freeLongVector(long int * );
-void freeShortVector(short int * );
-double ** allocateDoubleMatrix(int, int);
-float ** allocateFloatMatrix(int, int);
-unsigned char ** allocateCharMatrix(int, int);
-short int ** allocateShortMatrix(int, int);
-long int ** allocateLongMatrix(int, int);
-void freeDoubleMatrix(double **, int);
-void freeFloatMatrix(float **, int);
-void freeLongMatrix(long int **, int);
-void freeShortMatrix(short int **, int);
-void freeCharMatrix(unsigned char **, int);
-double * allocateDoubleVector(int);
-float * allocateFloatVector(int);
-short int * allocateShortVector(int);
-long int * allocateLongVector(int);
-unsigned char * allocateCharVector(int);
+double multipleCorrelation(double **X, double *y, int n, int m, double *b){
 
-double ** multiplyMatrix(double **, double **, int, int, int);
-double ** trasposeMatrix(double **, int, int);
-double * matrixToVector(double **, int, int);
-double ** vectorToMatrix(double *, int, int);
-double vectorLength(double *, int);
-double ** addMatrix(double **, double **, int, int);
-double ** subtractMatrix(double **, double **, int, int);
-double ** mergeVector(double *, double *, int);
-double ** createIdentityMatrix(int);
-double ** scalarMultiplyMatrix(double **, double, int, int);
-double ** diagonalMatrix(double **, int );
-double * vectorInnerProduct(double *, double *, int);
-double * vectorAddition(double *, double *, int);
-double * vectorSubtract(double *, double *, int);
-double * vectorDivision(double *, double *, int);
-double * scalarMultiplyVector(double *, double, int);
-double *  normalVector(double *, int);
-double ** copyMatrix(double **, int, int);
-double * copyVector(double *, int);
-int printMatrix(double **, int, int);
-int printVector(double *, int);
-int resetMartixDoubleZero(double **, int, int);
-int resetVectorDoubleZero(double *, int);
+ int i,j; 
+ double *yprime;
+ yprime=allocateDoubleVector(m);
 
-double matrixTrace(double **, int);
-
-double * gaussianElimination (int, double **, double *);
-double * backSubstitution (int, double **, double *);
-double * forwardSubstitution (int, double **, double *);
-double matrixDeterminant(double **, int);
-double ** matrixInverse(double **, int);
-double ** minorMatrix(double **, int, int, int);
-double ** cofactorMatrix(double **, int);
-
-int LUFactotisation (int, double **, double **, double **);
-double * LUSolver(double **, double *, int);
-
-void testVectorAlgebra(){
-
- double v[]={4,11,8,10};
- double vLength=0;
-
- double v1[]={3,2,1,-2};
- double v2[]={2,-1,4,1};
-
- vLength=vectorLength(v, 4);
- printf("vector length: %f\n",vLength);
-
- printf("vector addition\n");
- vectorAddition(v1, v2, 4);
- printVector(v1,4);
-
+ for (i=0; i<m; i++){
+  yprime[i]=0.0; 
+  for (j=0; j<n; j++){
+   yprime[i]+=b[j]*X[i][j];
+  }
+ }
+  return correlation ((float*)y,(float*)yprime,m);
 }
 
+double * multipleLinearRegression(double **X, double *y, int n, int m){
 
+ double **A, **XT, **B, *b, *x, **Y;
+ int i,j; 
 
-void testGaussianElimination(){
- 
- double **A;
- int n;
- double *x; 
- n=3;
- double b[n];
+ Y=vectorToMatrix(y,m,1);
 
- A=allocateDoubleMatrix(3, 3);
+ x=allocateDoubleVector(n);
+ XT=trasposeMatrix(X,n,m); 
+/* XT.X.x = XT.b */
+ A=multiplyMatrix(XT,X,m,n,n);
+ B=multiplyMatrix(XT,Y,m,n,1); 
+ b=matrixToVector(B,n,1);
 
- A[0][0]=1.0;  A[0][1]=1.0;  A[0][2]=-1.0;
- A[1][0]=1.0;  A[1][1]=2.0;  A[1][2]=1.0;
- A[2][0]=2.0;  A[2][1]=-1.0;  A[2][2]=1.0;
+ for (i=0; i<n; i++){ 
+  for (j=0; j<n; j++){
+   fprintf(stdout,"%f ",A[i][j]); 
+  }
+  fprintf(stdout,"\n"); 
+ }  
  
- b[0]=2.0;
- b[1]=6.0;
- b[2]=1.0;
+ for(i=0;i<n;i++) fprintf(stdout,"%f ",b[i]);
+  fprintf(stdout,"\n"); 
  
- x=gaussianElimination (n, A, b); 
- 
- fprintf(stdout,"Gaussian Elimination\n");
- printVector(x,n);
+ x = gaussianElimination (n, A, b); 
 
-}
+ return x;
 
-void testMatrixDeterminant(){
-
- int n;
- double **C;
- n=3;
- 
- C=allocateDoubleMatrix(3, 3);
-
- C[0][0]=6.0;  C[0][1]=1.0;  C[0][2]=1.0;
- C[1][0]=4.0;  C[1][1]=-2.0;  C[1][2]=5.0;
- C[2][0]=2.0;  C[2][1]=8.0; C[2][2]=7.0;
- 
- fprintf(stdout,"Matrix Determinant\n");
- fprintf(stdout,"%f \n", matrixDeterminant(C,n));
-
-}
-
-void testMatrixInverse(){
- 
- double **A, **B;
- int n;
- n=3;
- 
- A=allocateDoubleMatrix(3, 3);
-
- A[0][0]=1.0;  A[0][1]=2.0;  A[0][2]=3.0;
- A[1][0]=0.0;  A[1][1]=4.0;  A[1][2]=5.0;
- A[2][0]=1.0;  A[2][1]=0.0;  A[2][2]=6.0;
- 
- 
- B=matrixInverse(A,n);
- 
- fprintf(stdout,"Matrix Inversion\n");
- printMatrix(B,n,n);
- 
-}
-
-void testLUFactorisation(){
- 
- double **A, **L, **U;
- int n;
- n=3;
- 
- A=allocateDoubleMatrix(n, n);
- L=allocateDoubleMatrix(n, n);
- U=allocateDoubleMatrix(n, n);
-
- A[0][0]=6.0;  A[0][1]=0.0;  A[0][2]=2.0;
- A[1][0]=24.0;  A[1][1]=1.0;  A[1][2]=8.0;
- A[2][0]=-12.0;  A[2][1]=1.0;  A[2][2]=-3.0;
- 
- LUFactotisation(n,A,U,L);
- 
- fprintf(stdout,"Matrix Factorisation U:\n");
- printMatrix(U,n,n);
-
- fprintf(stdout,"Matrix Factorisation L:\n");
- printMatrix(L,n,n);
- 
-}
-
-void testLUSolver(){
- 
- double **A, *x;
- int n;
- n=3;
- double b[n];
- 
- A=allocateDoubleMatrix(n, n);
- 
-
- A[0][0]=6.0;  A[0][1]=0.0;  A[0][2]=2.0;
- A[1][0]=24.0;  A[1][1]=1.0;  A[1][2]=8.0;
- A[2][0]=-12.0;  A[2][1]=1.0;  A[2][2]=-3.0;
- 
- b[0]=4.0;
- b[1]=19.0;
- b[2]=-6.0;
-
- x=LUSolver(A,b,n);
- 
- fprintf(stdout,"LU solver U:\n");
- printVector(x,n);
-
-}
-
-
-int main(int argc, char *argv[])
-{
- 
- testVectorAlgebra(); 
- testGaussianElimination();
- testMatrixDeterminant();
- testMatrixInverse();
- testLUFactorisation();
- testLUSolver();
-
- return EXIT_SUCCESS;
- 
 }
 
 double * LUSolver(double **A, double *b, int n){
@@ -745,42 +594,72 @@ double vectorLength(double *a, int n)
 
 }
 
-double * allocateDoubleVector(int i){
+double * allocateDoubleVector(int n){
+ 
+ int i;
  double *vector;
- if((vector = (double *) calloc(i,sizeof(double)))==NULL) 
-  memoryCheck(); 
- return vector;
-}
-
-
-float * allocateFloatVector(int i){
- float *vector;
- if((vector = (float *) calloc(i,sizeof(float)))==NULL) 
+ if((vector = (double *) calloc(n,sizeof(double)))==NULL) 
   memoryCheck();
+
+ for (i=0;i<n;i++)
+   vector[i]=0.0;
+ 
  return vector;
 }
 
 
-short int * allocateShortVector(int i){
+float * allocateFloatVector(int n){
+
+ int i;
+ float *vector;
+ if((vector = (float *) calloc(n,sizeof(float)))==NULL) 
+  memoryCheck();
+ 
+ for (i=0;i<n;i++)
+   vector[i]=0.0;
+
+ return vector;
+}
+
+
+short int * allocateShortVector(int n){
+ 
+ int i;
  short int *vector;
- if((vector = (short int *) calloc(i,sizeof(short int)))==NULL) 
-  memoryCheck();  
+ if((vector = (short int *) calloc(n,sizeof(short int)))==NULL) 
+  memoryCheck(); 
+
+ for (i=0;i<n;i++)
+   vector[i]=0.0;
+ 
  return vector;
 }
 
 
-long int * allocateLongVector(int i){
+long int * allocateLongVector(int n){
+
+ int i;
  long int *vector;
- if((vector = (long int *) calloc(i,sizeof(long int)))==NULL) 
-  memoryCheck();  
+ if((vector = (long int *) calloc(n,sizeof(long int)))==NULL) 
+  memoryCheck();
+
+ for (i=0;i<n;i++)
+   vector[i]=0.0;
+ 
  return vector;
 }
 
 
-unsigned char * allocateCharVector(int i){
+unsigned char * allocateCharVector(int n){
+
+ int i;
  unsigned char *vector;
- if((vector = (unsigned char *) calloc(i,sizeof(unsigned char)))==NULL) 
-  memoryCheck();  
+ if((vector = (unsigned char *) calloc(n,sizeof(unsigned char)))==NULL) 
+  memoryCheck(); 
+
+  for (i=0;i<n;i++)
+   vector[i]=0.0;
+ 
  return vector;
 }
 
@@ -792,7 +671,7 @@ void freeShortVector(short int * vector){ free(vector);}
 
 double ** allocateDoubleMatrix(int i, int j){
  
- int k;
+ int k,n,m;
  double ** matrix;
 
  if((matrix = (double **) calloc(i, sizeof(double *)))==NULL)
@@ -800,57 +679,78 @@ double ** allocateDoubleMatrix(int i, int j){
 
  for (k=0; k< i; k++)matrix[k] = allocateDoubleVector(j);
  
+ for (n=0;n<i;n++)
+  for (m=0;m<j;m++)
+   matrix[n][m]=0;
+
  return matrix;
 }
 
 float ** allocateFloatMatrix(int i, int j){
  
- int k;
+ int k,n,m;
  float ** matrix;
 
  if((matrix = (float **) calloc(i, sizeof(float *)))==NULL)
   memoryCheck();
 
  for (k=0; k< i; k++)matrix[k] = allocateFloatVector(j);
+
+ for (n=0;n<i;n++)
+  for (m=0;m<j;m++)
+   matrix[n][m]=0;
+
  
  return matrix;
 }
 
 unsigned char ** allocateCharMatrix(int i, int j){
  
- int k;
+ int k,n,m;
  unsigned char ** matrix;
 
  if((matrix = (unsigned char **) calloc(i, sizeof(unsigned char *)))==NULL)
   memoryCheck();
 
  for (k=0; k< i; k++)matrix[k] = allocateCharVector(j);
+
+ for (n=0;n<i;n++)
+  for (m=0;m<j;m++)
+   matrix[n][m]=0;
  
  return matrix;
 }
 
 long int ** allocateLongMatrix(int i, int j){
  
- int k;
+ int k,n,m;
  long int ** matrix;
 
  if((matrix = (long int **) calloc(i, sizeof(long int *)))==NULL)
   memoryCheck();
 
  for (k=0; k< i; k++)matrix[k] = allocateLongVector(j);
+
+ for (n=0;n<i;n++)
+  for (m=0;m<j;m++)
+   matrix[n][m]=0;
  
  return matrix;
 }
 
 short int ** allocateShortMatrix(int i, int j){
  
- int k;
+ int k,n,m;
  short int ** matrix;
 
  if((matrix = (short int **) calloc(i, sizeof(short int *)))==NULL)
   memoryCheck();
 
  for (k=0; k< i; k++)matrix[k] = allocateShortVector(j);
+
+ for (n=0;n<i;n++)
+  for (m=0;m<j;m++)
+   matrix[n][m]=0;
  
  return matrix;
 }
@@ -886,11 +786,5 @@ void freeCharMatrix(unsigned char ** matrix, int rows){
  int i;
  for (i =0; i < rows; i++) freeCharVector(matrix[i]);
  free(matrix);
-}
-
-int memoryCheck(void)	
-{	
- fprintf(stderr,"\nUnable to allocate memory.\n\n");
- exit(EXIT_FAILURE);
 }
 

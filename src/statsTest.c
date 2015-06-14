@@ -1,65 +1,16 @@
+/*
+NAME:		statsTest.c 
+DESCRIPTION: 	For statistical testing
+AUTHOR:	 	Will Grey
+VERSION:	2015-05-05	
+LICENSE:	This is free and unencumbered software 
+                released into the public domain.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
-
-#define T_TABLE_PROBABILITY 4
-#define T_TABLE_DOF 36
-#define CHI_TABLE_DOF 10
-#define CHI_TABLE_PRBABILITY 3
-
-
-double correlationTTest(double, int);
-double rSignifcanceTest(double, int, int);
-int correlationProbability(double, int);
-double chiSquaredDistribution(double,int);
-double chiProbability(double **, int, int);
-double chiSquared(double **, int, int);
-
-double ** allocateDoubleMatrix(int, int);
-double * allocateDoubleVector(int);
-
-void testRSignificanceTest(){
- 
- correlationProbability(0.21, 23);
- correlationProbability(0.12, 43);
- correlationProbability(0.4, 30);
- correlationProbability(0.7, 50);
-
-}
-
-
-void testChiSquared(){
-
- printf("chisq: the result is significant at p <%4.3f\n",chiSquaredDistribution(16,3));
- 
- double **observed, **observed2;
-
- observed=allocateDoubleMatrix(3,3);
-
- observed[0][0]=49;  observed[0][1]=50; observed[0][2]=69; 
- observed[1][0]=24;  observed[1][1]=36; observed[1][2]=38; 
- observed[2][0]=19;  observed[2][1]=22; observed[2][2]=28;
-
- printf("chisq: the result is significant at p <%4.3f\n",chiProbability(observed,3,3));
- 
- observed2=allocateDoubleMatrix(2,2);
-
- observed2[0][0]=25;  observed2[0][1]=6; 
- observed2[1][0]=8;  observed2[1][1]=15; 
- 
- printf("chisq: the result is significant at p <%4.3f\n",chiProbability(observed2,2,2));
-
-}
-
-int main(int argc, char *argv[]){
-
- testRSignificanceTest();
- testChiSquared();
-
- return (EXIT_SUCCESS);
-
-}
+#include "numerical.h"
 
 double chiProbability(double **observed, int categories, int dataTypes){
  
@@ -201,38 +152,4 @@ double rSignifcanceTest(double r, int N, int tail){
   if (tail==2) prob*=2.0;
   return prob;    
  }
-
-
-
-
-double ** allocateDoubleMatrix(int i, int j){
- 
- int k, l;
- double ** matrix;
-
- matrix = (double **) calloc(i, sizeof(double *));
- 
-
- for (k=0; k< i; k++)matrix[k] = allocateDoubleVector(j);
-
- for (k=0;k<i;k++)
-  for (l=0;l<j;l++)
-   matrix[l][k]=0;
-
- 
- return matrix;
-}
-
-double * allocateDoubleVector(int i){
- int j;
- double *vector;
- vector = (double *) calloc(i,sizeof(double)); 
-  
- 
- for (j=0;j<i;j++)
-  vector[j]=0;
-   
- return vector;
-}
-
 
