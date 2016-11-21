@@ -33,7 +33,7 @@ double multipleCorrelation(double **X, double *y, int n, int m, double *b){
 double * multipleLinearRegression(double **X, double *y, int n, int m){
 
  double **A, **XT, **B, *b, *x, **Y;
- int i,j; 
+/* int i,j; */ 
 
  Y=vectorToMatrix(y,m,1);
 
@@ -44,7 +44,7 @@ double * multipleLinearRegression(double **X, double *y, int n, int m){
  B=multiplyMatrix(XT,Y,m,n,1); 
  b=matrixToVector(B,n,1);
 
- for (i=0; i<n; i++){ 
+/* for (i=0; i<n; i++){ 
   for (j=0; j<n; j++){
    fprintf(stdout,"%f ",A[i][j]); 
   }
@@ -52,7 +52,7 @@ double * multipleLinearRegression(double **X, double *y, int n, int m){
  }  
  
  for(i=0;i<n;i++) fprintf(stdout,"%f ",b[i]);
-  fprintf(stdout,"\n"); 
+  fprintf(stdout,"\n"); */
  
  x = gaussianElimination (n, A, b); 
 
@@ -493,6 +493,21 @@ double ** multiplyMatrix(double **A, double **B,  int m, int n1, int n2){
   return X;
 }
 
+double * multiplyMatrixVector(double **A, double *b,  int m, int n){
+ 
+ int i, j;
+ double *x;
+ x=allocateDoubleVector(n);
+
+ for (i=0; i<n; i++)
+  x[i]=0.0;
+
+ for (j=0; j<n; j++)
+  for (i=0; i<m; i++)
+   x[j]+=A[i][j]*b[i];
+     
+ return x;
+}
 
 double ** trasposeMatrix(double **A, int n, int m){
  

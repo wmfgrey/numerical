@@ -87,6 +87,32 @@ for(i=0;i<256;i++)
 
 }
 
+int plotHisto(float *img, int n, float *binSize, float *min, float *max, int Nbins, long *histogram){
+
+/* for non byte data */
+
+ int j;
+ int bin;
+ 
+ for (j=0;j<Nbins;j++)
+  histogram[j]=0;
+
+ for (j=0;j<n;j++){  
+  if (*(img + j) > *max) *max = *(img + j);
+  if (*(img + j) < *min) *min = *(img + j);
+ }
+  
+ *binSize = (*max - *min) / (float)Nbins;
+
+ for (j=0;j<n;j++){
+  bin=(*(img+j)-*min) / *binSize;
+  histogram[bin]++;
+ }
+
+ return (EXIT_SUCCESS);
+}
+
+
 double variance (float *data, int n)
 {
   return SQUARE((double)stdDev(data,n));

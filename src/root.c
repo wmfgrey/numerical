@@ -16,37 +16,6 @@ LICENSE:	This is free and unencumbered software
 #include <ctype.h>
 #include "numerical.h"
 
-
-double golden (double (*f)(double), double a, double b){
- 
- double goldenRatio = (sqrt(5)-1)/2;
- int i=0;
- double x1, x2;
- 
- x1 = b - goldenRatio * (b - a);
- x2 = a + goldenRatio * (b - a);
-
- while((fabs(b - a) > ERR_TOL) && (i < MAX_ITERS)){
-  
-  if (f(x2) > f(x1)){
-    b=x2;
-    x2=x1;
-    x1 = b - goldenRatio * (b - a);
-  }
-  else{
-    a=x1;
-    x1=x2;
-    x2 = a + goldenRatio * (b - a); 
-  }
-   i++;
-
-  }
-
- fprintf(stdout,"Golden: %f %f %d\n", f(fabs(b+a)/2), fabs(b+a)/2, i); 
- return fabs(b+a)/2;
-
-}
-
 double secant(double (*f)(double), double x1, double x2)
 {  
  

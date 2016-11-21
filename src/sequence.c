@@ -18,6 +18,10 @@ LICENSE:	This is free and unencumbered software
 #define BIG 2e6      
 #define SEED 1e3  
 
+int combination(int n, int r){
+ return factorial(n)/(factorial(r)*factorial(n-r));;
+}
+
 int factorial(int n)
 {	
  int f=0;

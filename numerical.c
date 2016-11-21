@@ -414,6 +414,7 @@ void testMultipleRegression(){
  
 }
 
+
 void testSimplex(){
  
  double **x;
@@ -422,12 +423,76 @@ void testSimplex(){
  x = allocateDoubleMatrix(n+1,n);
  x[0][0]=0.0; x[0][1]=0.0;
  x[1][0]=1.2; x[1][1]=0.0;
- x[2][0]=0.0; x[2][1]=0.8;
+ x[2][0]=0.0; x[2][1]=0.8; 
  
+/* x[0][0]=-1.200000; x[0][1]=1.000000; 
+ x[1][0]=-0.234074; x[1][1]=1.258819; 
+ x[2][0]=-0.941181; x[2][1]=1.965926; */
+
  printf("\nSimplex\n");
- simplexDownhill(testFunctionSimplex,x,n);
+ simplex(testFunctionSimplex,x,n);
  printf("%f %f\n",x[0][0],x[0][1]);
 
+}
+
+
+void testSimplex2(){
+ 
+ double **x;
+ int n=2; 
+ 
+ x = allocateDoubleMatrix(n+1,n);
+ x[0][0]=0.9; x[0][1]=0.9;
+ x[1][0]=0.9; x[1][1]=1.1;
+ x[2][0]=1.1; x[2][1]=0.9; 
+ 
+ printf("\nSimplex\n");
+ simplex(testFunctionSimplexRosenbrock,x,n);
+ printf("%f %f\n",x[0][0],x[0][1]);
+
+}
+
+
+void testSimplex3(){
+ 
+ double **x;
+ int n=2;
+ 
+ x = allocateDoubleMatrix(n+1,n);
+ x[0][0]=0.9; x[0][1]=0.9;
+ x[1][0]=0.9; x[1][1]=1.1;
+ x[2][0]=1.1; x[2][1]=0.9; 
+ 
+ printf("\nSimplex\n");
+ simplex(testFunctionSimplexFit,x,n);
+ printf("%f %f\n",x[0][0],x[0][1]);
+
+}
+
+void test_golden_fit(){
+ 
+ 
+ float x[]={1.707106,2.490711,3.605550,4.297620,5.656853};
+ float y[]={12.500000,4.166667,31.250000,81.250000,112.500000};
+
+ fprintf(stdout,"golden_fit: %f \n",goldenFit (-100.0, 100.0,x,y,5,test_linear_model));
+ 
+}
+
+void test_simplex_fit(){
+ 
+ double **a;
+ int dim=2;
+ 
+ a = allocateDoubleMatrix(dim+1,dim);
+ a[0][0]=0.9; a[0][1]=0.9;
+ a[1][0]=0.9; a[1][1]=1.1;
+ a[2][0]=1.1; a[2][1]=0.9; 
+
+ double x[]={1.707106,2.490711,3.605550,4.297620,5.656853};
+ double y[]={12.500000,4.166667,31.250000,81.250000,112.500000};
+ simplex_fit (a, dim, x, y, 5, test_linear_model_2); 
+ 
 }
 
 
@@ -450,8 +515,13 @@ int main(int argc, char *argv[])
  testTimeStep();
  testRSignificanceTest();
  testChiSquared();
- testMultipleRegression();
- testSimplex();
+ testMultipleRegression(); 
+ test_golden_fit();
+ testSimplex(); 
+ testSimplex2(); 
+ testSimplex3();
+ test_simplex_fit(); 
+
 
  return (EXIT_SUCCESS);
 

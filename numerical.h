@@ -19,7 +19,8 @@ LICENSE:	This is free and unencumbered software
 #define MAX_PATH_NAME_LENGTH 1000 
 #define NUM_DISTRIBUTION_BINS 100
 
-#define ERR_TOL    1e-6
+#define ERR_TOL_FIT 1e-4
+#define ERR_TOL    1e-9
 #define MAX_ITERS  200
 #define TRIALS     1e5
 #define SEED       1e3  
@@ -82,6 +83,7 @@ double StandardErrorOfMean(float  *, int);
 int univStats(float  *, int, univariateStats *);
 int univStatsByte(unsigned char *, int, univariateStats *);
 double sum (float *, int);
+int plotHisto(float *, int, float *, float *, float *, int, long *);
 
 /* utility.c */
 
@@ -107,6 +109,7 @@ long *fibonacci(int);
 double bayes(double, double, double);
 pdf* normalDistribution(double, double, int, double, int);
 double gammaFunction(double k);
+int combination(int,int);
 
 
 /* bivariateStats.c */
@@ -174,6 +177,8 @@ int LUFactotisation (int, double **, double **, double **);
 double * LUSolver(double **, double *, int);
 double multipleCorrelation(double **, double *, int, int, double *);
 double * multipleLinearRegression(double **, double *, int, int);
+double * multiplyMatrixVector(double **, double *,  int, int);
+
 
 /* root.c */
 double secant(double (*f)(double), double, double);
@@ -182,7 +187,6 @@ double bisect(double (*f)(double),double,double);
 double newton(double (*f)(double), double (*fd)(double), double);
 double regulaFalsi(double (*f)(double),double,double);
 double brute (double (*f)(double), double, double, double);
-double golden (double (*f)(double), double, double);
 double newtonSqaureRoot(double (*f)(double, double), double (*fd)(double), double, double);
 double squareRoot(double);
 double sqr(double, double);
@@ -233,11 +237,19 @@ double chiSquared(double **, int, int);
 int repositionSimplex(short int *, double **, int);
 int sortSimplex(double *, int, short int *);
 int calcCentroid(double **, int, double *);
-double simplexDownhill (double (*f)(double *, int), double **, int);
+double simplex (double (*f)(double *), double **, int);
+double merit_function(double *, double *, double *, int, double (*f)(double *, double));
+double simplex_fit (double **, int n, double *, double *, int, double (*f)(double *, double));
+
+
+/* golden.c */
+double golden (double (*f)(double), double, double);
+double goldenFit (double, double, float *, float *, int, double (*f)(float, float));
+float merit_function_golden(double *, float *, float *, int, double (*f)(float, float));
 
 /* testFunctions.c */
 double funcTimeStep(double, double);
-double testFunctionSimplex(double *, int);
+double testFunctionSimplex(double *);
 double exponent(double);
 double cosine(double);
 double poly(double);
@@ -248,4 +260,12 @@ double functionTest3(double x);
 double funcTest(double);
 double funcTest5(double, double);
 double funcTest6(double, double);
-	
+double testFunctionSimplexRosenbrock(double *);
+double testFunctionSimplexFit(double *);
+double test_linear_model(float, float);
+double test_linear_model_2(double *p, double h);
+
+
+
+
+

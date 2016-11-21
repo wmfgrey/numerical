@@ -32,7 +32,7 @@ int RealDFT(float *realIn, float *realOut, int n){
  for (i=0;i<n;i++){
   realOut[i]=0.0;
   for (k=0;k<n;k++){
-   realOut[k]+=realIn[k]*cos(2*PI*k*i/n);
+   realOut[i]+=realIn[k]*cos(2*PI*k*i/n);
   }
  }
 

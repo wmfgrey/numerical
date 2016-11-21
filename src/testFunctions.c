@@ -22,7 +22,41 @@ double funcTimeStep(double x, double y){
 
 }
 
-double testFunctionSimplex(double *x,int n){
+double test_linear_model(float a, float h){
+ 
+ return a * h;
+
+}
+
+double test_linear_model_2(double *p, double h){
+
+ return p[0] +  p[1] * h;
+
+}
+
+double testFunctionSimplexFit(double *x){
+
+double e;
+
+ e = pow((x[0] + (1.707106 * x[1]) - 12.500000),2) + 
+     pow((x[0] + (2.490711 * x[1]) - 4.166667),2) +
+     pow((x[0] + (3.605550 * x[1]) - 31.250000),2) +
+     pow((x[0] + (4.297620 * x[1]) - 81.250000),2) +
+     pow((x[0] + (5.656853 * x[1]) - 112.500000),2);
+
+ return e;
+}
+
+
+
+double testFunctionSimplexRosenbrock(double *x){
+
+ return 100 * pow((x[1] - pow(x[0],2)),2) + pow(1-x[0],2);
+  
+}
+
+
+double testFunctionSimplex(double *x){
 
  return pow(x[0],2) - (4 * x[0]) + pow(x[1],2) - x[1] - (x[0] * x[1]);
   

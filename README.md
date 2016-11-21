@@ -1,13 +1,14 @@
 
-A library of numerical tools that broadly fit into the following categoties.
-- Univariate and bivariate statistics in addition to statistical testign routines.
-- Integration and time stepping and sequencing routines.
-- Matrix routines, Fourier transform and N-dimensional interpolation.
-- Root finding and mininisation routines including N-dimensional simplex algorithm.
-- Utility tools for housekeeping and simple mathematical functions for testing 
-  and running the numerical routines.
+A library of numerical tools.
 
- 
+There are approximately 160 routines broadly categorised as follows:
+
+- bivariate and univariate statistics, including statistical testing
+- integration and time stepping routines
+- matrix algebra including multiple regression
+- Root finding algorithms along with mininisations routines including N-dimensional simplex minimisation
+- Fourier transform and N-dimensional linear interpolation
+- a range of mathematical test functions and basic utility tools for housekeeping.
 
 
 
